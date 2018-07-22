@@ -1,0 +1,24 @@
+https://community.hortonworks.com/articles/79891/kafka-mirror-maker-best-practices.html
+
+cmd:
+bin/kafka-run-class.sh kafka.tools.MirrorMaker --consumer.config sourceClusterConsumer.config --producer.config sourceClusterProducer.config --num.streams 2
+
+
+
+
+cat >sourceClusterConsumer.config <<EOL
+sourceClusterConsumer.config:
+bootstrap.servers=smartaqnet-0-node1.teco.edu:9092,smartaqnet-0-node2.teco.edu:9092,smartaqnet-0-node3.teco.edu:9092
+groupid=dp-MirrorMaker-group
+exclude.internal.topics=true
+mirror.topics.whitelist=Things,Observations,MultiDatastreams,Locations,ObservedProperties,HistoricalLocations,FeaturesOfInterest,DataStreams,BeatsLocal
+client.id=mirror_maker_consumer
+EOL
+
+cat >sourceClusterProducer.config <<EOL
+sourceClusterProducer.config:
+bootstrap.servers=smartaqnet-1-node1.teco.edu:9092
+acks=1
+batch.size=100
+client.id=mirror_maker_producer
+
